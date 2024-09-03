@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-compliant-pod
+spec:
+  containers:
+  - name: redis
+    image: redis:alpine
+    securityContext:
+      runAsNonRoot: true
+    resources:
+      limits:
+        cpu: "100m"
+        memory: "128Mi"

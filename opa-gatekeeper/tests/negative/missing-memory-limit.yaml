@@ -1,0 +1,14 @@
+# Violation: This pod should be denied because it does not specify a memory limit under resources.limits.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: missing-memory-limit
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    securityContext:
+      runAsNonRoot: true
+    resources:
+      limits:
+        cpu: "100m"

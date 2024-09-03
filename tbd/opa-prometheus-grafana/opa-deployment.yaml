@@ -1,0 +1,41 @@
+# The --prometheus flag tells OPA to expose metrics at /metrics on port 8282 by default.
+# Note: Ensure that your OPA service is configured to expose this port.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opa
+  template:
+    metadata:
+      labels:
+        app: opa
+    spec:
+      containers:
+      - name: opa
+        image: openpolicyagent/opa:latest
+        args:
+          - "run"
+          - "--server"
+          - "--addr=0.0.0.0:8181" # OPA server address
+          - "--diagnostic-addr=0.0.0.0:8282" # OPA metrics address
+          - "--prometheus" # Enable Prometheus metrics endpoint
+        ports:
+        - containerPort: 8181 # OPA server port
+        - containerPort: 8282 # OPA metrics port
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8181
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8181
+          initialDelaySeconds: 5
+          periodSeconds: 5

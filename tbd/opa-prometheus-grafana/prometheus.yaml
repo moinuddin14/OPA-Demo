@@ -1,0 +1,25 @@
+
+
+global:
+  scrape_interval: 15s  # Default scrape interval
+  evaluation_interval: 15s  # Default evaluation interval for rules
+
+scrape_configs:
+  # Scrape configuration for the Prometheus server itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Scrape configuration for OPA
+  - job_name: 'opa'
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_label_app]
+        action: keep
+        regex: opa
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: metrics
+    static_configs:
+      - targets: ['opa-service:8282']  # Assuming your OPA service is exposed on port 8282

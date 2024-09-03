@@ -1,0 +1,7 @@
+resources:
+- opa-configmap.yaml
+- opa-deployment.yaml
+- opa-service.yaml
+- validating-webhook.yaml
+- compliant-pod.yaml
+- test-pod.yaml

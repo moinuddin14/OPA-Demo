@@ -1,0 +1,34 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8spodsecurity
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPodSecurity
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8spodsecurity
+
+        violation[{"msg": msg}] {
+            input.review.kind.kind == "Pod"
+            container := input.review.object.spec.containers[_]
+            not container.securityContext.runAsNonRoot
+            msg := sprintf("Container %v must not run as root", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+            input.review.kind.kind == "Pod"
+            container := input.review.object.spec.containers[_]
+            not container.resources.limits.cpu
+            msg := sprintf("Container %v must specify a CPU limit", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+            input.review.kind.kind == "Pod"
+            container := input.review.object.spec.containers[_]
+            not container.resources.limits.memory
+            msg := sprintf("Container %v must specify a memory limit", [container.name])
+        }

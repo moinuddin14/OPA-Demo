@@ -1,0 +1,32 @@
+# Configures the Kubernetes ValidatingWebhookConfiguration to validate pod creations using an OPA server.
+# Specifies the OPA server's CA bundle and the service connecting to the OPA server.
+# Defines validation rules for pods, with a failure policy set to Fail.
+# Targets API resources like pods and applies to CREATE and UPDATE operations.
+# The webhook affects only namespaces with a specific opa-webhook label, using a NotIn selector to ignore those labeled as ignore.
+# Admission review versions are set to v1, and side effects are set to None.
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: opa-validating-webhook
+webhooks:
+  - name: validating-webhook.openpolicyagent.org
+    namespaceSelector:
+      matchExpressions:
+      - key: opa-webhook
+        operator: NotIn
+        values:
+        - ignore
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        namespace: default
+        name: opa
+      caBundle: ${CA_BUNDLE}
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail

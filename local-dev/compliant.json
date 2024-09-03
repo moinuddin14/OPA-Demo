@@ -1,0 +1,30 @@
+{
+    "request": {
+      "kind": {
+        "kind": "Pod"
+      },
+      "object": {
+        "metadata": {
+          "name": "compliant-pod"
+        },
+        "spec": {
+          "containers": [
+            {
+              "name": "nginx",
+              "image": "nginx:latest",
+              "securityContext": {
+                "runAsNonRoot": true
+              },
+              "resources": {
+                "limits": {
+                  "cpu": "100m",
+                  "memory": "128Mi"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  

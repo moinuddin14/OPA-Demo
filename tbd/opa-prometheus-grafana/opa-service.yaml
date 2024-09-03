@@ -1,0 +1,12 @@
+# Ensure that the OPA service exposes the /metrics endpoint so that Prometheus can scrape it
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa-service
+spec:
+  ports:
+    - port: 8282
+      targetPort: 8282
+  selector:
+    app: opa
