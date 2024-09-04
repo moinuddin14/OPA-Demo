@@ -69,3 +69,15 @@ kubectl apply -f opa-service.yaml
 ```
 
 ### Note: In our case we are using opa-deployment.yaml to deploy the OPA server. So, if you have followed the above steps, you can skip the last step of applying the `opa-deployment.yaml` and `opa-service.yaml` files.
+
+# Setup OPA for local development and testing
+
+```
+wget https://openpolicyagent.org/downloads/v0.56.0/opa_linux_amd64
+chmod +x opa_linux_amd64
+sudo mv opa_linux_amd64 /usr/local/bin/opa
+opa version
+opa run --server
+
+opa eval -i input.json -d policy.rego "data.kubernetes.admission.deny"
+```
